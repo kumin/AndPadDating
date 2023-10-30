@@ -36,5 +36,21 @@ var (
 			IsActive: 1,
 		},
 	}
-	Matchings = []*entities.UserMatching{}
+	Matchings = []*entities.UserMatching{
+		{
+			UserId:    1,
+			PartnerId: 2,
+			IsLike:    1,
+		},
+		{
+			UserId:    2,
+			PartnerId: 1,
+			IsLike:    1,
+		},
+		{
+			UserId:    3,
+			PartnerId: 1,
+			IsLike:    1,
+		},
+	}
 )

@@ -31,12 +31,11 @@
 ![database schema](docs/dbschema.png)
 
 ### Teck stack
-
 #### Programming language
-##### Golang
-##### Golang tech stack
+###### Golang
+###### Golang tech stack
 + Independency Injection framework: [wire](https://github.com/google/wire)
-+ Dtabase ORM: [gorm](https://github.com/go-gorm/gorm)
++ Database ORM: [gorm](https://github.com/go-gorm/gorm)
 + Unit test: [mockery](https://github.com/vektra/mockery)
 + Code format: [golangci-lint](https://github.com/golangci/golangci-lint)
 
@@ -45,7 +44,8 @@
 + blob database: [MinIO](https://min.io/)
 + cache: Redis
 
-### Demo (updating...)
+### Demo
+Using doker and minikubernets to create a deployment
 + Build:
 ```bash
 make build
@@ -53,4 +53,11 @@ make build
 + Test average covering:
 ```bash
 make test-unit
+```
++ Run demo
+```bash
+cd demo && \
+make build-image && \
+make upload-image && \
+make create-deployment
 ```

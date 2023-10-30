@@ -39,7 +39,7 @@ test-unit: di
 test-integration: di
 	go test -tags integration -v -race -p 1 -count=1 ./...
 
-static: di 
+build: di 
 	env GCO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(PROJECT_DIR)/out/ $(CMD_DIR)/server-ctl/
 
 .PHONY: clean

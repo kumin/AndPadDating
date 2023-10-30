@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: andpad-deployment
+  labels:
+    app: andpad-dating
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: andpad-dating
+  template:
+    metadata:
+      labels:
+        app: andpad-dating
+    spec:
+      containers:
+      - name: andpaddating
+        env:
+        - name: MYSQL_ADDRS
+          value: "root:12345678@tcp(host.docker.internal:3306)/kumin?charset=utf8&parseTime=True&loc=Local&multiStatements=true"
+        image: docker.io/library/andpaddating:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
