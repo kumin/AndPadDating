@@ -6,4 +6,5 @@ var ServiceGraphSet = wire.NewSet(
 	NewUserService,
 	NewMatchingService,
 	NewFeedService,
+	NewAuthService,
 )

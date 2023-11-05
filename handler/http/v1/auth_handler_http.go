@@ -1,0 +1,59 @@
+package http_handler
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/kumin/AndPadDating/entities"
+	"github.com/kumin/AndPadDating/erroz"
+	"github.com/kumin/AndPadDating/handler"
+	"github.com/kumin/AndPadDating/services"
+)
+
+type AuthHandler struct {
+	authService *services.AuthService
+}
+
+func NewAuthHandler(
+	authService *services.AuthService,
+) *AuthHandler {
+	return &AuthHandler{
+		authService: authService,
+	}
+}
+
+func (a *AuthHandler) Register(c *gin.Context) {
+	var user entities.User
+	if err := c.BindJSON(&user); err != nil {
+		_ = c.Error(err)
+		c.JSON(http.StatusBadRequest, handler.ErrorMessage(err))
+		return
+	}
+	if err := handler.ValidateCreateUser(&user); err != nil {
+		_ = c.Error(err)
+		c.JSON(http.StatusBadRequest, handler.ErrorMessage(err))
+		return
+	}
+	registeredUser, err := a.authService.Register(c.Request.Context(), &user)
+	if err != nil {
+		_ = c.Error(err)
+		c.JSON(http.StatusInternalServerError, handler.ErrorMessage(err))
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, registeredUser)
+}
+
+func (a *AuthHandler) Login(c *gin.Context) {
+	phone, ok := c.GetQuery("phone")
+	if !ok {
+		c.JSON(http.StatusBadRequest, handler.ErrorMessage(erroz.ErrPhoneIsMissing))
+	}
+	token, err := a.authService.Login(c.Request.Context(), phone)
+	if err != nil {
+		_ = c.Error(err)
+		c.JSON(http.StatusInternalServerError, token)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
+}

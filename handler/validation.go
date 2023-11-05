@@ -14,6 +14,9 @@ func ValidateCreateUser(user *entities.User) error {
 	if strings.IsEmpty(user.Username) {
 		return errors.New("Username is missing")
 	}
+	if strings.IsEmpty(user.Phone) {
+		return errors.New("Phone is missing")
+	}
 	return nil
 }
 

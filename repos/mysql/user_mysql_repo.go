@@ -66,6 +66,15 @@ func (u *UserMysqlRepo) DeleteOne(ctx context.Context, id int64) error {
 	return u.db.Client.WithContext(ctx).Delete(&entities.User{}, id).Error
 }
 
+func (u *UserMysqlRepo) GetByPhone(ctx context.Context, phone string) (*entities.User, error) {
+	var user entities.User
+	if err := u.db.Client.WithContext(ctx).Where("phone=?", phone).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (u *UserMysqlRepo) VerifyPhone(ctx context.Context, phone string) (bool, error) {
 	var user entities.User
 	if err := u.db.Client.WithContext(ctx).WithContext(ctx).Where("phone=?", phone).Find(&user).Error; err != nil {

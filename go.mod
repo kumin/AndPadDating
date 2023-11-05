@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.9.1
+	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/google/wire v0.5.0
 	github.com/kumin/go-tpc v0.0.0-20230713031625-a655b0ae6b59
 	github.com/rs/zerolog v1.31.0

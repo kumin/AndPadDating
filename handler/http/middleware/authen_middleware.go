@@ -1,9 +1,23 @@
 package middleware
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"net/http"
 
-func ValidateLogin() gin.HandlerFunc {
+	"github.com/gin-gonic/gin"
+	"github.com/kumin/AndPadDating/erroz"
+	"github.com/kumin/AndPadDating/handler"
+	"github.com/kumin/AndPadDating/services"
+)
+
+func ValidateToken() gin.HandlerFunc {
+	fmt.Println("hahahah")
 	return func(c *gin.Context) {
-		//TODO: validate token
+		token := c.GetHeader("x-token")
+		if services.ValidateToken(token) {
+			c.JSON(http.StatusBadRequest, handler.ErrorMessage(erroz.ErrBadToken))
+			return
+		}
+		c.Next()
 	}
 }

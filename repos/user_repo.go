@@ -14,5 +14,6 @@ type UserRepo interface {
 	UpdateOne(ctx context.Context, user *entities.User) (*entities.User, error)
 	DeleteOne(ctx context.Context, id int64) error
 
+	GetByPhone(ctx context.Context, phone string) (*entities.User, error)
 	VerifyPhone(ctx context.Context, phone string) (bool, error)
 }

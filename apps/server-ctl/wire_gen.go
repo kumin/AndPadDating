@@ -29,7 +29,9 @@ func BuildServer() (*HttpServer, error) {
 	feedMysqlRepo := mysql.NewFeedMysqlRepo(mysqlConnector)
 	feedService := services.NewFeedService(feedMysqlRepo)
 	feedHandler := http_handler.NewFeedHandler(feedService)
-	httpServer := NewHttpServer(serverConfiguration, userHandler, matchingHandler, feedHandler)
+	authService := services.NewAuthService(userMysqlRepo)
+	authHandler := http_handler.NewAuthHandler(authService)
+	httpServer := NewHttpServer(serverConfiguration, userHandler, matchingHandler, feedHandler, authHandler)
 	return httpServer, nil
 }
 

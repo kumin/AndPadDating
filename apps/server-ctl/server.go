@@ -22,26 +22,31 @@ func NewHttpServer(
 	userHandler *http_handler.UserHandler,
 	matchingHandler *http_handler.MatchingHandler,
 	feedHandler *http_handler.FeedHandler,
+	authHandler *http_handler.AuthHandler,
 ) *HttpServer {
 	router := gin.Default()
 	// UserAPI
-	router.Use(middleware.ValidateLogin())
-	userGroup := router.Group("/v1/user")
-	userGroup.POST("", userHandler.CreateUser)
+	userGroup := router.Group("/v1/user", middleware.ValidateToken())
+	//userGroup.POST("", userHandler.CreateUser)
 	userGroup.GET("/:id", userHandler.GetUser)
 	userGroup.PUT("/:id", userHandler.UpdateUser)
 	userGroup.DELETE("/:id", userHandler.DeleteUser)
 
 	// MatchingAPI
-	matchingGroup := router.Group("/v1/matching")
-	matchingGroup.POST("", matchingHandler.CreateMatching)
+	matchingGroup := router.Group("/v1/matching", middleware.ValidateToken())
+	matchingGroup.POST("", middleware.ValidateToken(), matchingHandler.CreateMatching)
 	matchingGroup.GET("/whoilike/:userid", matchingHandler.WhoILike)
 	matchingGroup.GET("/wholikeme/:partnerid", matchingHandler.WhoLikeMe)
 	matchingGroup.GET("/list/:userid", matchingHandler.ListMatching)
 
 	//FeedAPI
-	feedGroup := router.Group("v1/feed")
+	feedGroup := router.Group("/v1/feed", middleware.ValidateToken())
 	feedGroup.GET("/:userid", feedHandler.GetFeed)
+
+	//AuthAPI
+	authGroup := router.Group("/v1/auth")
+	authGroup.POST("/register", authHandler.Register)
+	authGroup.POST("/login", authHandler.Login)
 
 	return &HttpServer{
 		port:   configs.Port,

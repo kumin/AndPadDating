@@ -8,4 +8,5 @@ var HttpHandlerGraphSet = wire.NewSet(
 	NewUserHandler,
 	NewMatchingHandler,
 	NewFeedHandler,
+	NewAuthHandler,
 )
