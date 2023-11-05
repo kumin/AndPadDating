@@ -14,8 +14,9 @@ func ValidateToken() gin.HandlerFunc {
 	fmt.Println("hahahah")
 	return func(c *gin.Context) {
 		token := c.GetHeader("x-token")
-		if services.ValidateToken(token) {
+		if !services.ValidateToken(token) {
 			c.JSON(http.StatusBadRequest, handler.ErrorMessage(erroz.ErrBadToken))
+			c.Abort()
 			return
 		}
 		c.Next()
