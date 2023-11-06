@@ -30,7 +30,8 @@ func (u *UserServiceSuiteTest) TestUserService_Create() {
 		Return(func(ctx context.Context, user *entities.User) (*entities.User, error) {
 			return mocks_data.Users[0], nil
 		})
-	_, err := u.userService.CreateUser(context.Background(), mocks_data.Users[0])
+	user, err := u.userService.CreateUser(context.Background(), mocks_data.Users[0])
+	u.Equal(mocks_data.Users[0].Id, user.Id)
 	u.Nil(err)
 }
 

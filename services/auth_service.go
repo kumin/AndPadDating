@@ -65,7 +65,7 @@ func (a *AuthService) Login(ctx context.Context, phone string) (*entities.Regist
 
 func ValidateToken(token string) bool {
 	jwtToken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
-		if _, ok := t.Method.(*jwt.SigningMethodRSA); !ok {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("[auth services] unexpected signing method: %v", t.Header["alg"])
 		}
 		return []byte(configs.SecretKey), nil

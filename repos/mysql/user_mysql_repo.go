@@ -25,7 +25,7 @@ func NewUserMysqlRepo(
 	}
 }
 func (u *UserMysqlRepo) CreateOne(ctx context.Context, user *entities.User) (*entities.User, error) {
-	if err := u.db.Client.WithContext(ctx).Create(user).Error; err != nil {
+	if err := u.db.Client.WithContext(ctx).Omit("id").Create(user).Error; err != nil {
 		return nil, err
 	}
 
@@ -77,7 +77,7 @@ func (u *UserMysqlRepo) GetByPhone(ctx context.Context, phone string) (*entities
 
 func (u *UserMysqlRepo) VerifyPhone(ctx context.Context, phone string) (bool, error) {
 	var user entities.User
-	if err := u.db.Client.WithContext(ctx).WithContext(ctx).Where("phone=?", phone).Find(&user).Error; err != nil {
+	if err := u.db.Client.WithContext(ctx).WithContext(ctx).Where("phone=?", phone).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return true, nil
 		}

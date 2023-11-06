@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kumin/AndPadDating/erroz"
@@ -11,10 +11,14 @@ import (
 )
 
 func ValidateToken() gin.HandlerFunc {
-	fmt.Println("hahahah")
 	return func(c *gin.Context) {
-		token := c.GetHeader("x-token")
-		if !services.ValidateToken(token) {
+		authToken := strings.Split(c.GetHeader("authorization"), " ")
+		if len(authToken) < 2 {
+			c.JSON(http.StatusBadRequest, handler.ErrorMessage(erroz.ErrBadToken))
+			c.Abort()
+			return
+		}
+		if !services.ValidateToken(authToken[1]) {
 			c.JSON(http.StatusBadRequest, handler.ErrorMessage(erroz.ErrBadToken))
 			c.Abort()
 			return

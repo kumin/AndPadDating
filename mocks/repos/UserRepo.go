@@ -54,6 +54,32 @@ func (_m *UserRepo) DeleteOne(ctx context.Context, id int64) error {
 	return r0
 }
 
+// GetByPhone provides a mock function with given fields: ctx, phone
+func (_m *UserRepo) GetByPhone(ctx context.Context, phone string) (*entities.User, error) {
+	ret := _m.Called(ctx, phone)
+
+	var r0 *entities.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*entities.User, error)); ok {
+		return rf(ctx, phone)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) *entities.User); ok {
+		r0 = rf(ctx, phone)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.User)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, phone)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetOne provides a mock function with given fields: ctx, id
 func (_m *UserRepo) GetOne(ctx context.Context, id int64) (*entities.User, error) {
 	ret := _m.Called(ctx, id)

@@ -11,7 +11,7 @@ var (
 		{
 			Id:       1,
 			Username: "phuong thao",
-			Phone:    "03670187576",
+			Phone:    "03670111111",
 			Email:    "test9@.com",
 			BirthDay: time.Now(),
 			Gender:   "female",

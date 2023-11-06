@@ -10,7 +10,7 @@ const (
 )
 
 type User struct {
-	Id          int64     `json:"id,omitempty"`
+	Id          int64     `json:"id,omitempty" gorm:"primaryKey,autoIncrement"`
 	Username    string    `json:"username,omitempty"`
 	Phone       string    `json:"phone,omitempty"`
 	Email       string    `json:"email,omitempty"`
