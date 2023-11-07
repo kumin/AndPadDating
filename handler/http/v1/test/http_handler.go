@@ -15,17 +15,21 @@ type HttpHandler struct {
 	userHandler     *http_handler.UserHandler
 	matchingHandler *http_handler.MatchingHandler
 	authHandler     *http_handler.AuthHandler
+
+	userService *services.UserService
 }
 
 func NewHttpHandler(
 	userHandler *http_handler.UserHandler,
 	matchingHandler *http_handler.MatchingHandler,
 	authHandler *http_handler.AuthHandler,
+	userService *services.UserService,
 ) *HttpHandler {
 	return &HttpHandler{
 		userHandler:     userHandler,
 		matchingHandler: matchingHandler,
 		authHandler:     authHandler,
+		userService:     userService,
 	}
 }
 

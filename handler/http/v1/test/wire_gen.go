@@ -28,7 +28,7 @@ func BuildHttpHandler() (*HttpHandler, error) {
 	matchingHandler := http_handler.NewMatchingHandler(matchingService)
 	authService := services.NewAuthService(userMysqlRepo)
 	authHandler := http_handler.NewAuthHandler(authService)
-	httpHandler := NewHttpHandler(userHandler, matchingHandler, authHandler)
+	httpHandler := NewHttpHandler(userHandler, matchingHandler, authHandler, userService)
 	return httpHandler, nil
 }
 
@@ -38,17 +38,21 @@ type HttpHandler struct {
 	userHandler     *http_handler.UserHandler
 	matchingHandler *http_handler.MatchingHandler
 	authHandler     *http_handler.AuthHandler
+
+	userService *services.UserService
 }
 
 func NewHttpHandler(
 	userHandler *http_handler.UserHandler,
 	matchingHandler *http_handler.MatchingHandler,
 	authHandler *http_handler.AuthHandler,
+	userService *services.UserService,
 ) *HttpHandler {
 	return &HttpHandler{
 		userHandler:     userHandler,
 		matchingHandler: matchingHandler,
 		authHandler:     authHandler,
+		userService:     userService,
 	}
 }
 

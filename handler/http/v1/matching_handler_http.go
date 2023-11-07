@@ -69,7 +69,7 @@ func (m *MatchingHandler) WhoILike(c *gin.Context) {
 }
 
 func (m *MatchingHandler) WhoLikeMe(c *gin.Context) {
-	id, err := handler.GetParam("partnerid", &c.Params)
+	id, err := handler.GetParam("userid", &c.Params)
 	if err != nil {
 		_ = c.Error(err)
 		c.JSON(http.StatusBadRequest, handler.ErrorMessage(err))

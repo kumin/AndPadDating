@@ -49,11 +49,12 @@ func (a *AuthHandler) Login(c *gin.Context) {
 	if !ok {
 		c.JSON(http.StatusBadRequest, handler.ErrorMessage(erroz.ErrPhoneIsMissing))
 	}
-	token, err := a.authService.Login(c.Request.Context(), phone)
+	loginUser, err := a.authService.Login(c.Request.Context(), phone)
 	if err != nil {
 		_ = c.Error(err)
-		c.JSON(http.StatusInternalServerError, token)
+		c.JSON(http.StatusInternalServerError, handler.ErrorMessage(err))
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, loginUser)
 }

@@ -36,7 +36,7 @@ func NewHttpServer(
 	matchingGroup := router.Group("/v1/matching", middleware.ValidateToken())
 	matchingGroup.POST("", middleware.ValidateToken(), matchingHandler.CreateMatching)
 	matchingGroup.GET("/whoilike/:userid", matchingHandler.WhoILike)
-	matchingGroup.GET("/wholikeme/:partnerid", matchingHandler.WhoLikeMe)
+	matchingGroup.GET("/wholikeme/:userid", matchingHandler.WhoLikeMe)
 	matchingGroup.GET("/list/:userid", matchingHandler.ListMatching)
 
 	//FeedAPI
