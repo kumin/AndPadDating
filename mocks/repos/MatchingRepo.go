@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	entities "github.com/kumin/AndPadDating/entities"
+	entities "github.com/kumin/BityDating/entities"
 	mock "github.com/stretchr/testify/mock"
 )
 

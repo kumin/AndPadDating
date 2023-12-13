@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/kumin/AndPadDating/entities"
-	"github.com/kumin/AndPadDating/handler"
-	"github.com/kumin/AndPadDating/services"
+	"github.com/kumin/BityDating/entities"
+	"github.com/kumin/BityDating/handler"
+	"github.com/kumin/BityDating/services"
 )
 
 type UserHandler struct {

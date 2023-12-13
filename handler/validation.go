@@ -3,8 +3,8 @@ package handler
 import (
 	"errors"
 
-	"github.com/kumin/AndPadDating/entities"
-	"github.com/kumin/AndPadDating/pkg/strings"
+	"github.com/kumin/BityDating/entities"
+	"github.com/kumin/BityDating/pkg/strings"
 )
 
 func ValidateCreateUser(user *entities.User) error {

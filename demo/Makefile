@@ -1,7 +1,7 @@
 IMAGENAME=andpaddating:1.0
 
-buil-image:
-	docker build -t $(IMAGENAME) .
+build-image:
+	docker build -t $(IMAGENAME) ./..
 
 docker-run:
 	docker run \

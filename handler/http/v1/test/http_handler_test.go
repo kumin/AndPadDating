@@ -15,8 +15,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kumin/AndPadDating/entities"
-	"github.com/kumin/AndPadDating/services"
+	"github.com/kumin/BityDating/entities"
+	"github.com/kumin/BityDating/services"
 	"github.com/stretchr/testify/suite"
 )
 

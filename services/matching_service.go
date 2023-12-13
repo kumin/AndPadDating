@@ -3,8 +3,8 @@ package services
 import (
 	"context"
 
-	"github.com/kumin/AndPadDating/entities"
-	"github.com/kumin/AndPadDating/repos"
+	"github.com/kumin/BityDating/entities"
+	"github.com/kumin/BityDating/repos"
 )
 
 type MatchingService struct {

@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	infras "github.com/kumin/AndPadDating/infras"
+	infras "github.com/kumin/BityDating/infras"
 	mock "github.com/stretchr/testify/mock"
 )
 

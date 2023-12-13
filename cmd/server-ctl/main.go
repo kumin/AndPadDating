@@ -7,7 +7,7 @@ import (
 	"sync"
 	"syscall"
 
-	apps "github.com/kumin/AndPadDating/apps/server-ctl"
+	apps "github.com/kumin/BityDating/apps/server-ctl"
 )
 
 func main() {

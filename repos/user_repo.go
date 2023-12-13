@@ -3,7 +3,7 @@ package repos
 import (
 	"context"
 
-	"github.com/kumin/AndPadDating/entities"
+	"github.com/kumin/BityDating/entities"
 )
 
 type UserRepo interface {

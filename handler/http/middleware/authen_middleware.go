@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kumin/AndPadDating/erroz"
-	"github.com/kumin/AndPadDating/handler"
-	"github.com/kumin/AndPadDating/services"
+	"github.com/kumin/BityDating/erroz"
+	"github.com/kumin/BityDating/handler"
+	"github.com/kumin/BityDating/services"
 )
 
 func ValidateToken() gin.HandlerFunc {

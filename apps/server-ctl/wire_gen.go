@@ -8,11 +8,11 @@ package apps
 
 import (
 	"github.com/google/wire"
-	"github.com/kumin/AndPadDating/configs"
-	"github.com/kumin/AndPadDating/handler/http/v1"
-	"github.com/kumin/AndPadDating/infras"
-	"github.com/kumin/AndPadDating/repos/mysql"
-	"github.com/kumin/AndPadDating/services"
+	"github.com/kumin/BityDating/configs"
+	http_handler "github.com/kumin/BityDating/handler/http/v1"
+	"github.com/kumin/BityDating/infras"
+	"github.com/kumin/BityDating/repos/mysql"
+	"github.com/kumin/BityDating/services"
 )
 
 // Injectors from wire.go:

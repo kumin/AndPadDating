@@ -5,9 +5,9 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kumin/AndPadDating/configs"
-	"github.com/kumin/AndPadDating/handler"
-	"github.com/kumin/AndPadDating/services"
+	"github.com/kumin/BityDating/configs"
+	"github.com/kumin/BityDating/handler"
+	"github.com/kumin/BityDating/services"
 )
 
 type FeedHandler struct {

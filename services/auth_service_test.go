@@ -7,9 +7,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/kumin/AndPadDating/entities"
-	mocks_data "github.com/kumin/AndPadDating/mocks/data"
-	mocks_repo "github.com/kumin/AndPadDating/mocks/repos"
+	"github.com/kumin/BityDating/entities"
+	mocks_data "github.com/kumin/BityDating/mocks/data"
+	mocks_repo "github.com/kumin/BityDating/mocks/repos"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/gorm"

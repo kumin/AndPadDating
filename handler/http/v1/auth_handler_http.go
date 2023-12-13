@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kumin/AndPadDating/entities"
-	"github.com/kumin/AndPadDating/erroz"
-	"github.com/kumin/AndPadDating/handler"
-	"github.com/kumin/AndPadDating/services"
+	"github.com/kumin/BityDating/entities"
+	"github.com/kumin/BityDating/erroz"
+	"github.com/kumin/BityDating/handler"
+	"github.com/kumin/BityDating/services"
 )
 
 type AuthHandler struct {

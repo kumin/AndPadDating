@@ -6,9 +6,9 @@ import (
 
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
-	"github.com/kumin/AndPadDating/configs"
-	"github.com/kumin/AndPadDating/handler/http/middleware"
-	http_handler "github.com/kumin/AndPadDating/handler/http/v1"
+	"github.com/kumin/BityDating/configs"
+	"github.com/kumin/BityDating/handler/http/middleware"
+	http_handler "github.com/kumin/BityDating/handler/http/v1"
 	"github.com/rs/zerolog/log"
 )
 

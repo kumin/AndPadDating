@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/kumin/AndPadDating/configs"
-	"github.com/kumin/AndPadDating/erroz"
-	"github.com/kumin/AndPadDating/repos"
+	"github.com/kumin/BityDating/configs"
+	"github.com/kumin/BityDating/erroz"
+	"github.com/kumin/BityDating/repos"
 	"github.com/minio/minio-go/v7"
 )
 

@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/kumin/AndPadDating/entities"
-	"github.com/kumin/AndPadDating/infras"
-	"github.com/kumin/AndPadDating/repos"
+	"github.com/kumin/BityDating/entities"
+	"github.com/kumin/BityDating/infras"
+	"github.com/kumin/BityDating/repos"
 	"gorm.io/gorm"
 )
 

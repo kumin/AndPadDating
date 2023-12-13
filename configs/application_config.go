@@ -3,7 +3,7 @@ package configs
 import (
 	"time"
 
-	"github.com/kumin/AndPadDating/pkg/envx"
+	"github.com/kumin/BityDating/pkg/envx"
 )
 
 var MaxPageLimit = envx.GetInt("MAX_PAGE_LIMIT", 100)

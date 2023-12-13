@@ -3,7 +3,7 @@ package mocks
 import (
 	"time"
 
-	"github.com/kumin/AndPadDating/entities"
+	"github.com/kumin/BityDating/entities"
 )
 
 var (

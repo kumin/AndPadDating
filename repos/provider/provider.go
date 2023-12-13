@@ -2,9 +2,9 @@ package provider
 
 import (
 	"github.com/google/wire"
-	"github.com/kumin/AndPadDating/infras"
-	"github.com/kumin/AndPadDating/repos"
-	"github.com/kumin/AndPadDating/repos/mysql"
+	"github.com/kumin/BityDating/infras"
+	"github.com/kumin/BityDating/repos"
+	"github.com/kumin/BityDating/repos/mysql"
 )
 
 var MysqlGraphSet = wire.NewSet(
