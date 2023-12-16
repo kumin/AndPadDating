@@ -24,6 +24,6 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
 
-func (u User) TableName() string {
+func (User) TableName() string {
 	return "user"
 }

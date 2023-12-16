@@ -14,7 +14,9 @@ var (
 )
 
 var (
-	AccessKeyId     = envx.GetString("ACCESS_KEY_ID", "")
-	SecretAccessKey = envx.GetString("SECRET_ACCESS_KEY", "")
-	BuketName       = envx.GetString("MINIO_BUCKET_NAME", "andpad")
+	MinioHost       = envx.GetString("MINIO_HOST", "localhost:9000")
+	MinioProtocol   = envx.GetString("MINIO_PROTOCOL", "http")
+	AccessKeyId     = envx.GetString("ACCESS_KEY_ID", "I91rtieW4WuptqlNR6pn")
+	SecretAccessKey = envx.GetString("SECRET_ACCESS_KEY", "xl1gMawfhfjQdXhXW7B2Yy3Bm4ZAHZcZoRjvkeGe")
+	BuketName       = envx.GetString("MINIO_BUCKET_NAME", "bity")
 )

@@ -31,6 +31,7 @@ func NewHttpServer(
 	userGroup.GET("/:id", userHandler.GetUser)
 	userGroup.PUT("/:id", userHandler.UpdateUser)
 	userGroup.DELETE("/:id", userHandler.DeleteUser)
+	userGroup.POST("/:id/upload", userHandler.UploadFile)
 
 	// MatchingAPI
 	matchingGroup := router.Group("/v1/matching", middleware.ValidateToken())

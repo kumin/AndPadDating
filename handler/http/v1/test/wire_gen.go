@@ -9,8 +9,9 @@ package httphandlertest
 import (
 	"github.com/google/wire"
 	"github.com/kumin/BityDating/configs"
-	http_handler "github.com/kumin/BityDating/handler/http/v1"
+	"github.com/kumin/BityDating/handler/http/v1"
 	"github.com/kumin/BityDating/infras"
+	"github.com/kumin/BityDating/repos/minio"
 	"github.com/kumin/BityDating/repos/mysql"
 	"github.com/kumin/BityDating/repos/provider"
 	"github.com/kumin/BityDating/services"
@@ -21,7 +22,12 @@ import (
 func BuildHttpHandler() (*HttpHandler, error) {
 	mysqlConnector := infras.NewMysqlConnector()
 	userMysqlRepo := mysql.NewUserMysqlRepo(mysqlConnector)
-	userService := services.NewUserService(userMysqlRepo)
+	client, err := infras.NewMinioClient()
+	if err != nil {
+		return nil, err
+	}
+	fileMinioRepo := minio.NewFileMinioRepo(client)
+	userService := services.NewUserService(userMysqlRepo, fileMinioRepo)
 	userHandler := http_handler.NewUserHandler(userService)
 	matchingMysqlRepo := mysql.NewMatchingMysqlRepo(mysqlConnector)
 	matchingService := services.NewMatchingService(matchingMysqlRepo)

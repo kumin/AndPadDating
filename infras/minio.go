@@ -1,12 +1,10 @@
 package infras
 
 import (
+	"github.com/kumin/BityDating/configs"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
-
-type MinIOConntion struct {
-}
 
 type MinIOOption struct {
 	Endpoint        string
@@ -16,9 +14,9 @@ type MinIOOption struct {
 }
 
 var MinIODefaultOpt = &MinIOOption{
-	Endpoint:        "localhost",
-	AccessKeyId:     "ceWgGznr9VNLYk8bh8Rx",
-	SecretAccessKey: "dE7SQ4yT9rHEBIHbjm7AXi2uxX87x73t3eZooPxg",
+	Endpoint:        configs.MinioHost,
+	AccessKeyId:     configs.AccessKeyId,
+	SecretAccessKey: configs.SecretAccessKey,
 }
 
 type MinIOOptFunction func(opt *MinIOOption) *MinIOOption
@@ -44,14 +42,14 @@ func WithSecretAccessKey(secretAccessKey string) MinIOOptFunction {
 	}
 }
 
-func WithUseSSl(useSSL bool) MinIOOptFunction {
+func WithUseSSL(useSSL bool) MinIOOptFunction {
 	return func(opt *MinIOOption) *MinIOOption {
 		opt.UseSSL = useSSL
 		return opt
 	}
 }
 
-func NewMinIOClient(optFns ...MinIOOptFunction) (*minio.Client, error) {
+func NewMinioClientWithOptions(optFns ...MinIOOptFunction) (*minio.Client, error) {
 	minIOOpt := MinIODefaultOpt
 	for _, opt := range optFns {
 		minIOOpt = opt(minIOOpt)
@@ -63,4 +61,8 @@ func NewMinIOClient(optFns ...MinIOOptFunction) (*minio.Client, error) {
 			Secure: minIOOpt.UseSSL,
 		},
 	)
+}
+
+func NewMinioClient() (*minio.Client, error) {
+	return NewMinioClientWithOptions()
 }

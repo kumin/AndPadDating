@@ -2,10 +2,12 @@ package minio
 
 import (
 	"context"
-	"strings"
+	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/kumin/BityDating/configs"
-	"github.com/kumin/BityDating/erroz"
+	"github.com/kumin/BityDating/entities"
+	"github.com/kumin/BityDating/pkg/strings"
 	"github.com/kumin/BityDating/repos"
 	"github.com/minio/minio-go/v7"
 )
@@ -24,16 +26,24 @@ func NewFileMinioRepo(
 	}
 }
 
-func (f *FileMinioRepo) UploadFile(ctx context.Context, pathFile string) (fileUrl string, err error) {
-	fileName := strings.Split(pathFile, "/")
-	if len(fileName) < 2 {
-		return "", erroz.ErrInvalidPathFile
-	}
-	fileInfo, err := f.minioClient.FPutObject(ctx, configs.BuketName, fileName[len(fileName)-1], pathFile,
-		minio.PutObjectOptions{ContentType: "image/png"})
+func (f *FileMinioRepo) UploadFile(
+	ctx context.Context,
+	file *entities.File) (fileUrl string, err error) {
+	fileName := fmt.Sprintf("%s-%s", uuid.NewString(), file.Name)
+	fileInfo, err := f.minioClient.PutObject(ctx,
+		configs.BuketName,
+		fileName,
+		file.Buffer,
+		file.Size,
+		minio.PutObjectOptions{ContentType: file.ContentType})
 	if err != nil {
 		return "", err
 	}
-
-	return fileInfo.Location, nil
+	if strings.IsEmpty(fileInfo.Key) {
+		return "", nil
+	}
+	//should use Nginx for proxy image server
+	fileUrl = fmt.Sprintf("%s://%s/%s/%s", configs.MinioProtocol, configs.MinioHost, configs.BuketName, fileInfo.Key)
+	err = nil
+	return
 }

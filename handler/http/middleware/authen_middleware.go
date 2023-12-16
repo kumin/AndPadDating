@@ -1,10 +1,12 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kumin/BityDating/entities"
 	"github.com/kumin/BityDating/erroz"
 	"github.com/kumin/BityDating/handler"
 	"github.com/kumin/BityDating/services"
@@ -18,11 +20,15 @@ func ValidateToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if !services.ValidateToken(authToken[1]) {
+		claims, isValid := services.ValidateToken(authToken[1])
+		if !isValid {
 			c.JSON(http.StatusBadRequest, handler.ErrorMessage(erroz.ErrBadToken))
 			c.Abort()
 			return
 		}
+		ctx := c.Request.Context()
+		ctx = context.WithValue(ctx, entities.CtxUserIdKey, claims.UserId)
+		c.Request = c.Request.WithContext(ctx)
 		c.Next()
 	}
 }
