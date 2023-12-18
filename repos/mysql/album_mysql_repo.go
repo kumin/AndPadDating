@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/kumin/BityDating/entities"
 	"github.com/kumin/BityDating/infras"
@@ -41,8 +42,30 @@ func (a *AlbumMysqlRepo) CreateOne(ctx context.Context, imageFile *entities.File
 	return image, nil
 }
 
-func (a *AlbumMysqlRepo) CreateMany(ctx context.Context, imageFile []*entities.File) ([]*entities.Image, error) {
-	return nil, nil
+func (a *AlbumMysqlRepo) CreateMany(ctx context.Context, imageFiles []*entities.File) ([]*entities.Image, error) {
+	imageUrls := make([]string, 0, len(imageFiles))
+	for _, file := range imageFiles {
+		imageUrl, err := a.fileRepo.UploadFile(ctx, file)
+		if err != nil {
+			return nil, err
+		}
+		imageUrls = append(imageUrls, imageUrl)
+	}
+	fmt.Println(len(imageFiles), len(imageUrls))
+	images := make([]*entities.Image, 0, len(imageUrls))
+	userId := ctx.Value(entities.CtxUserIdKey).(int64)
+	for _, url := range imageUrls {
+		image := &entities.Image{
+			Url:    url,
+			UserId: userId,
+		}
+		images = append(images, image)
+	}
+	if err := a.mysqlClient.Client.WithContext(ctx).CreateInBatches(images, 1000).Error; err != nil {
+		return nil, err
+	}
+
+	return images, nil
 }
 
 func (a *AlbumMysqlRepo) GetUserAlbum(ctx context.Context) ([]*entities.Image, error) {

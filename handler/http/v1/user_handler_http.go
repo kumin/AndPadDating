@@ -102,13 +102,13 @@ func (u *UserHandler) DeleteUser(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "delete successfully"})
 }
 
-func (u *UserHandler) UploadFile(c *gin.Context) {
+func (u *UserHandler) SetAvatar(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		_ = c.Error(err)
 		c.JSON(http.StatusBadRequest, handler.ErrorMessage(err))
 	}
-	fileUrl, err := u.userService.UploadFile(c.Request.Context(), file)
+	fileUrl, err := u.userService.SetAvatar(c.Request.Context(), file)
 	if err != nil {
 		_ = c.Error(err)
 		c.JSON(http.StatusInternalServerError, handler.ErrorMessage(err))

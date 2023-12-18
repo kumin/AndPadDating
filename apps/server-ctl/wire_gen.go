@@ -37,7 +37,10 @@ func BuildServer() (*HttpServer, error) {
 	feedHandler := http_handler.NewFeedHandler(feedService)
 	authService := services.NewAuthService(userMysqlRepo)
 	authHandler := http_handler.NewAuthHandler(authService)
-	httpServer := NewHttpServer(serverConfiguration, userHandler, matchingHandler, feedHandler, authHandler)
+	albumMysqlRepo := mysql.NewAlbumMysqlRepo(mysqlConnector, fileMinioRepo)
+	albumService := services.NewAlbumService(albumMysqlRepo)
+	albumHandler := http_handler.NewAlbumHandler(albumService)
+	httpServer := NewHttpServer(serverConfiguration, userHandler, matchingHandler, feedHandler, authHandler, albumHandler)
 	return httpServer, nil
 }
 

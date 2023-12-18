@@ -23,6 +23,7 @@ func NewHttpServer(
 	matchingHandler *http_handler.MatchingHandler,
 	feedHandler *http_handler.FeedHandler,
 	authHandler *http_handler.AuthHandler,
+	albumHandler *http_handler.AlbumHandler,
 ) *HttpServer {
 	router := gin.Default()
 	// UserAPI
@@ -31,7 +32,13 @@ func NewHttpServer(
 	userGroup.GET("/:id", userHandler.GetUser)
 	userGroup.PUT("/:id", userHandler.UpdateUser)
 	userGroup.DELETE("/:id", userHandler.DeleteUser)
-	userGroup.POST("/:id/upload", userHandler.UploadFile)
+	userGroup.POST("/:id/avatar", userHandler.SetAvatar)
+
+	// Album API
+	albumGroup := router.Group("/v1/album", middleware.ValidateToken())
+	albumGroup.POST("/upone", albumHandler.CreateOne)
+	albumGroup.POST("/upmany", albumHandler.CreateMany)
+	albumGroup.GET("/useralbum", albumHandler.GetUserAlbum)
 
 	// MatchingAPI
 	matchingGroup := router.Group("/v1/matching", middleware.ValidateToken())

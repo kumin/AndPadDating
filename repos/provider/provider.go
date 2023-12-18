@@ -18,4 +18,6 @@ var MysqlGraphSet = wire.NewSet(
 	wire.Bind(new(repos.FeedRepo), new(*mysql.FeedMysqlRepo)),
 	minio.NewFileMinioRepo,
 	wire.Bind(new(repos.FileRepo), new(*minio.FileMinioRepo)),
+	mysql.NewAlbumMysqlRepo,
+	wire.Bind(new(repos.AlbumRepo), new(*mysql.AlbumMysqlRepo)),
 )

@@ -39,18 +39,10 @@ func (u *UserService) DeleteUser(ctx context.Context, id int64) error {
 	return u.userRepo.DeleteOne(ctx, id)
 }
 
-func (u *UserService) UploadFile(ctx context.Context, file *multipart.FileHeader) (string, error) {
-	fileEntity := &entities.File{
-		Name:        file.Filename,
-		ContentType: file.Header.Get("Content-Type"),
-		Size:        file.Size,
-	}
-	fileBuffer, err := file.Open()
-	defer fileBuffer.Close()
-	fileEntity.Buffer = fileBuffer
+func (u *UserService) SetAvatar(ctx context.Context, file *multipart.FileHeader) (string, error) {
+	fileEntity, err := ConvertMultipartToFile(file)
 	if err != nil {
 		return "", err
 	}
-
 	return u.fileRepo.UploadFile(ctx, fileEntity)
 }

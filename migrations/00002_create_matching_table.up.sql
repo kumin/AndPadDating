@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `matching` (
-  user_id INT NOT NULL,
-  partner_id INT NOT NULL,
+  user_id BIGINT NOT NULL,
+  partner_id BIGINT NOT NULL,
   is_like TINYINT NOT NULL,
 
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
