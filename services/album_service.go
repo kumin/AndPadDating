@@ -6,10 +6,13 @@ import (
 
 	"github.com/kumin/BityDating/entities"
 	"github.com/kumin/BityDating/repos"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type AlbumService struct {
 	albumRepo repos.AlbumRepo
+	tracer    trace.Tracer
 }
 
 func NewAlbumService(
@@ -17,6 +20,7 @@ func NewAlbumService(
 ) *AlbumService {
 	return &AlbumService{
 		albumRepo: albumRepo,
+		tracer:    otel.Tracer("AlbumService"),
 	}
 }
 
@@ -43,5 +47,7 @@ func (a *AlbumService) CreateMany(ctx context.Context, imageFiles []*multipart.F
 }
 
 func (a *AlbumService) GetUserAlbum(ctx context.Context) ([]*entities.Image, error) {
+	ctx, span := a.tracer.Start(ctx, "GetUserAlbum")
+	defer span.End()
 	return a.albumRepo.GetUserAlbum(ctx)
 }

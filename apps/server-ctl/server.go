@@ -9,7 +9,10 @@ import (
 	"github.com/kumin/BityDating/configs"
 	"github.com/kumin/BityDating/handler/http/middleware"
 	http_handler "github.com/kumin/BityDating/handler/http/v1"
+	"github.com/kumin/BityDating/monitor"
 	"github.com/rs/zerolog/log"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 type HttpServer struct {
@@ -24,8 +27,14 @@ func NewHttpServer(
 	feedHandler *http_handler.FeedHandler,
 	authHandler *http_handler.AuthHandler,
 	albumHandler *http_handler.AlbumHandler,
-) *HttpServer {
+) (*HttpServer, error) {
+	// instrument
+	latencyHistogram, err := monitor.LatencyHistorgram()
+	if err != nil {
+		return nil, err
+	}
 	router := gin.Default()
+	router.Use(otelgin.Middleware("bity_dating"))
 	// UserAPI
 	userGroup := router.Group("/v1/user", middleware.ValidateToken())
 	//userGroup.POST("", userHandler.CreateUser)
@@ -35,7 +44,7 @@ func NewHttpServer(
 	userGroup.POST("/:id/avatar", userHandler.SetAvatar)
 
 	// Album API
-	albumGroup := router.Group("/v1/album", middleware.ValidateToken())
+	albumGroup := router.Group("/v1/album", middleware.MeterAPI(latencyHistogram), middleware.ValidateToken())
 	albumGroup.POST("/upone", albumHandler.CreateOne)
 	albumGroup.POST("/upmany", albumHandler.CreateMany)
 	albumGroup.GET("/useralbum", albumHandler.GetUserAlbum)
@@ -59,10 +68,12 @@ func NewHttpServer(
 	return &HttpServer{
 		port:   configs.Port,
 		server: router,
-	}
+	}, nil
 }
 
 func (h *HttpServer) Start(ctx context.Context) error {
-	log.Printf("Server is listening on port:%d", h.port)
-	return endless.ListenAndServe(fmt.Sprintf("localhost:%d", h.port), h.server)
+	log.Info().Msgf("Server is listening on port:%d", h.port)
+	otelHandler := otelhttp.NewHandler(h.server, "/",
+		otelhttp.WithMessageEvents(otelhttp.ReadEvents, otelhttp.WriteEvents))
+	return endless.ListenAndServe(fmt.Sprintf(":%d", h.port), otelHandler)
 }

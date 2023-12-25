@@ -7,6 +7,8 @@ import (
 	"github.com/kumin/BityDating/entities"
 	"github.com/kumin/BityDating/infras"
 	"github.com/kumin/BityDating/repos"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
 )
 
 var _ repos.AlbumRepo = &AlbumMysqlRepo{}
@@ -14,6 +16,7 @@ var _ repos.AlbumRepo = &AlbumMysqlRepo{}
 type AlbumMysqlRepo struct {
 	mysqlClient *infras.MysqlConnector
 	fileRepo    repos.FileRepo
+	tracer      trace.Tracer
 }
 
 func NewAlbumMysqlRepo(
@@ -23,6 +26,7 @@ func NewAlbumMysqlRepo(
 	return &AlbumMysqlRepo{
 		mysqlClient: mysqlClient,
 		fileRepo:    fileRepo,
+		tracer:      otel.Tracer("AlbumMysqlRepo"),
 	}
 }
 
@@ -69,6 +73,8 @@ func (a *AlbumMysqlRepo) CreateMany(ctx context.Context, imageFiles []*entities.
 }
 
 func (a *AlbumMysqlRepo) GetUserAlbum(ctx context.Context) ([]*entities.Image, error) {
+	ctx, span := a.tracer.Start(ctx, "GetUserAlbum")
+	defer span.End()
 	var images []*entities.Image
 	userId := ctx.Value(entities.CtxUserIdKey).(int64)
 	if err := a.mysqlClient.Client.WithContext(ctx).Where("user_id=?", userId).Find(&images).Error; err != nil {

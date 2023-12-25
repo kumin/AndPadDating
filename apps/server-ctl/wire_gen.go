@@ -11,6 +11,7 @@ import (
 	"github.com/kumin/BityDating/configs"
 	"github.com/kumin/BityDating/handler/http/v1"
 	"github.com/kumin/BityDating/infras"
+	"github.com/kumin/BityDating/monitor/instrumentation"
 	"github.com/kumin/BityDating/repos/minio"
 	"github.com/kumin/BityDating/repos/mysql"
 	"github.com/kumin/BityDating/services"
@@ -40,8 +41,17 @@ func BuildServer() (*HttpServer, error) {
 	albumMysqlRepo := mysql.NewAlbumMysqlRepo(mysqlConnector, fileMinioRepo)
 	albumService := services.NewAlbumService(albumMysqlRepo)
 	albumHandler := http_handler.NewAlbumHandler(albumService)
-	httpServer := NewHttpServer(serverConfiguration, userHandler, matchingHandler, feedHandler, authHandler, albumHandler)
+	httpServer, err := NewHttpServer(serverConfiguration, userHandler, matchingHandler, feedHandler, authHandler, albumHandler)
+	if err != nil {
+		return nil, err
+	}
 	return httpServer, nil
+}
+
+func BuildMetricServer() (*instrumentation.MetricServer, error) {
+	metricServerCfg := configs.NewMetricServerCfg()
+	metricServer := instrumentation.NewMetricServer(metricServerCfg)
+	return metricServer, nil
 }
 
 // wire.go:

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/kumin/go-tpc/pkg/envx"
+	"github.com/uptrace/opentelemetry-go-extra/otelgorm"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -20,6 +21,9 @@ func MysqlConnectionBuilder(fns ...optionFn) *MysqlConnector {
 	}
 	client, err := gorm.Open(mysql.Open(opt.DSN), &gorm.Config{})
 	if err != nil {
+		log.Fatal(err)
+	}
+	if err := client.Use(otelgorm.NewPlugin()); err != nil {
 		log.Fatal(err)
 	}
 	pool, err := client.DB()

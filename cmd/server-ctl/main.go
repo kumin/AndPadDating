@@ -4,31 +4,51 @@ import (
 	"context"
 	"log"
 	"os/signal"
-	"sync"
 	"syscall"
 
 	apps "github.com/kumin/BityDating/apps/server-ctl"
+	"github.com/kumin/BityDating/monitor/instrumentation"
+	zerolog "github.com/rs/zerolog/log"
+	"golang.org/x/sync/errgroup"
 )
 
 func main() {
-	ctx, done := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGSYS)
-	defer done()
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGSYS)
+	defer stop()
 	server, err := apps.BuildServer()
 	if err != nil {
 		log.Fatal(err)
 	}
-	ctx, cancel := context.WithCancel(ctx)
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func(ctx context.Context) {
-		go server.Start(ctx)
-		select {
-		case <-ctx.Done():
-			cancel()
+	metricServer, err := apps.BuildMetricServer()
+	if err != nil {
+		log.Fatal(err)
+	}
+	shutdown, err := instrumentation.SetupInstrument(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() {
+		err := shutdown(ctx)
+		if err != nil {
+			zerolog.Error().Msgf(err.Error())
 		}
-		defer func() {
-			wg.Done()
-		}()
-	}(ctx)
-	wg.Wait()
+	}()
+
+	ge, ctx := errgroup.WithContext(ctx)
+	ge.Go(func() error {
+		return server.Start(ctx)
+	})
+	ge.Go(func() error {
+		return metricServer.Start(ctx)
+	})
+	ge.Go(func() error {
+		for range ctx.Done() {
+			stop()
+			break
+		}
+		return nil
+	})
+	if err := ge.Wait(); err != nil {
+		panic(err)
+	}
 }
