@@ -4,17 +4,17 @@ import (
 	"errors"
 
 	"github.com/kumin/BityDating/entities"
-	"github.com/kumin/BityDating/pkg/strings"
+	"github.com/kumin/BityDating/pkg/stringx"
 )
 
 func ValidateCreateUser(user *entities.User) error {
 	if user == nil {
 		return errors.New("user is nil")
 	}
-	if strings.IsEmpty(user.Username) {
+	if stringx.IsEmpty(user.Username) {
 		return errors.New("Username is missing")
 	}
-	if strings.IsEmpty(user.Phone) {
+	if stringx.IsEmpty(user.Phone) {
 		return errors.New("Phone is missing")
 	}
 	return nil

@@ -65,7 +65,7 @@ func (a *AuthServiceTestSuit) TestAuthService_Login_Happy() {
 	a.Nil(err)
 	a.Equal(registeredUser.User.Id, mocks_data.Users[0].Id)
 
-	ok := ValidateToken(registeredUser.Token)
+	_, ok := ValidateToken(registeredUser.Token)
 	a.True(ok)
 }
 

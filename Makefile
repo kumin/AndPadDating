@@ -33,7 +33,7 @@ mock:
 test-covering: di
 	$(GOTEST) -v -race -count=1 -coverprofile=tmp/coverprofile.out.tmp ./... && go tool cover -html=tmp/coverprofile.out.tmp 
 
-test-unit: di
+test-unit: di mock
 	$(GOTEST) -v -race -count=1 ./...
 
 test-integration: di

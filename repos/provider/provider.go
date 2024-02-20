@@ -20,4 +20,6 @@ var MysqlGraphSet = wire.NewSet(
 	wire.Bind(new(repos.FileRepo), new(*minio.FileMinioRepo)),
 	mysql.NewAlbumMysqlRepo,
 	wire.Bind(new(repos.AlbumRepo), new(*mysql.AlbumMysqlRepo)),
+	mysql.NewWalletMysqlRepo,
+	wire.Bind(new(repos.WalletRepo), new(*mysql.WalletMysqlRepo)),
 )

@@ -41,7 +41,10 @@ func BuildServer() (*HttpServer, error) {
 	albumMysqlRepo := mysql.NewAlbumMysqlRepo(mysqlConnector, fileMinioRepo)
 	albumService := services.NewAlbumService(albumMysqlRepo)
 	albumHandler := http_handler.NewAlbumHandler(albumService)
-	httpServer, err := NewHttpServer(serverConfiguration, userHandler, matchingHandler, feedHandler, authHandler, albumHandler)
+	walletMysqlRepo := mysql.NewWalletMysqlRepo(mysqlConnector)
+	walletService := services.NewWalletService(walletMysqlRepo)
+	walletHandler := http_handler.NewWalletHandler(walletService)
+	httpServer, err := NewHttpServer(serverConfiguration, userHandler, matchingHandler, feedHandler, authHandler, albumHandler, walletHandler)
 	if err != nil {
 		return nil, err
 	}

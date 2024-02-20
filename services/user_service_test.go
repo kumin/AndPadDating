@@ -18,11 +18,13 @@ type UserServiceSuiteTest struct {
 	suite.Suite
 	userService *UserService
 	userRepo    *mocks_repo.UserRepo
+	fileRepo    *mocks_repo.FileRepo
 }
 
 func (u *UserServiceSuiteTest) SetupTest() {
 	u.userRepo = mocks_repo.NewUserRepo(u.T())
-	u.userService = NewUserService(u.userRepo)
+	u.fileRepo = mocks_repo.NewFileRepo(u.T())
+	u.userService = NewUserService(u.userRepo, u.fileRepo)
 }
 
 func (u *UserServiceSuiteTest) TestUserService_Create() {

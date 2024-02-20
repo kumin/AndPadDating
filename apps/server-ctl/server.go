@@ -27,6 +27,7 @@ func NewHttpServer(
 	feedHandler *http_handler.FeedHandler,
 	authHandler *http_handler.AuthHandler,
 	albumHandler *http_handler.AlbumHandler,
+	walletHandler *http_handler.WalletHandler,
 ) (*HttpServer, error) {
 	// instrument
 	latencyHistogram, err := monitor.LatencyHistorgram()
@@ -37,30 +38,43 @@ func NewHttpServer(
 	router.Use(otelgin.Middleware("bity_dating"))
 	// UserAPI
 	userGroup := router.Group("/v1/user", middleware.ValidateToken())
-	//userGroup.POST("", userHandler.CreateUser)
+	// userGroup.POST("", userHandler.CreateUser)
 	userGroup.GET("/:id", userHandler.GetUser)
 	userGroup.PUT("/:id", userHandler.UpdateUser)
 	userGroup.DELETE("/:id", userHandler.DeleteUser)
 	userGroup.POST("/:id/avatar", userHandler.SetAvatar)
 
 	// Album API
-	albumGroup := router.Group("/v1/album", middleware.MeterAPI(latencyHistogram), middleware.ValidateToken())
+	albumGroup := router.Group(
+		"/v1/album",
+		middleware.MeterAPI(latencyHistogram),
+		middleware.ValidateToken(),
+	)
 	albumGroup.POST("/upone", albumHandler.CreateOne)
 	albumGroup.POST("/upmany", albumHandler.CreateMany)
 	albumGroup.GET("/useralbum", albumHandler.GetUserAlbum)
 
 	// MatchingAPI
 	matchingGroup := router.Group("/v1/matching", middleware.ValidateToken())
-	matchingGroup.POST("", middleware.ValidateToken(), matchingHandler.CreateMatching)
+	matchingGroup.POST("", matchingHandler.CreateMatching)
 	matchingGroup.GET("/whoilike/:userid", matchingHandler.WhoILike)
 	matchingGroup.GET("/wholikeme/:userid", matchingHandler.WhoLikeMe)
 	matchingGroup.GET("/list/:userid", matchingHandler.ListMatching)
 
-	//FeedAPI
+	// FeedAPI
 	feedGroup := router.Group("/v1/feed", middleware.ValidateToken())
 	feedGroup.GET("/:userid", feedHandler.GetFeed)
 
-	//AuthAPI
+	// WalletAPI
+	walletGroup := router.Group(
+		"/v1/wallet",
+		middleware.MeterAPI(latencyHistogram),
+		middleware.ValidateToken(),
+	)
+	walletGroup.POST("", walletHandler.CreateTransaction)
+	walletGroup.GET("list/:userid", walletHandler.ListTransactions)
+
+	// AuthAPI
 	authGroup := router.Group("/v1/auth")
 	authGroup.POST("/register", authHandler.Register)
 	authGroup.POST("/login", authHandler.Login)

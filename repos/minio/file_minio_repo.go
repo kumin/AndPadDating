@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/kumin/BityDating/configs"
 	"github.com/kumin/BityDating/entities"
-	"github.com/kumin/BityDating/pkg/strings"
+	"github.com/kumin/BityDating/pkg/stringx"
 	"github.com/kumin/BityDating/repos"
 	"github.com/minio/minio-go/v7"
 )
@@ -28,7 +28,8 @@ func NewFileMinioRepo(
 
 func (f *FileMinioRepo) UploadFile(
 	ctx context.Context,
-	file *entities.File) (fileUrl string, err error) {
+	file *entities.File,
+) (fileUrl string, err error) {
 	fileName := fmt.Sprintf("%s-%s", uuid.NewString(), file.Name)
 	fileInfo, err := f.minioClient.PutObject(ctx,
 		configs.BuketName,
@@ -39,11 +40,17 @@ func (f *FileMinioRepo) UploadFile(
 	if err != nil {
 		return "", err
 	}
-	if strings.IsEmpty(fileInfo.Key) {
+	if stringx.IsEmpty(fileInfo.Key) {
 		return "", nil
 	}
-	//should use Nginx for proxy image server
-	fileUrl = fmt.Sprintf("%s://%s/%s/%s", configs.MinioProtocol, configs.MinioHost, configs.BuketName, fileInfo.Key)
+	// should use Nginx for proxy image server
+	fileUrl = fmt.Sprintf(
+		"%s://%s/%s/%s",
+		configs.MinioProtocol,
+		configs.MinioHost,
+		configs.BuketName,
+		fileInfo.Key,
+	)
 	err = nil
 	return
 }
