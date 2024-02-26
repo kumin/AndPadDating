@@ -73,6 +73,7 @@ func NewHttpServer(
 	)
 	walletGroup.POST("", walletHandler.CreateTransaction)
 	walletGroup.GET("list/:userid", walletHandler.ListTransactions)
+	walletGroup.GET("total-amount/:userid", walletHandler.GetTotal)
 
 	// AuthAPI
 	authGroup := router.Group("/v1/auth")

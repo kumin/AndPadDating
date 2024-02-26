@@ -36,12 +36,22 @@ func (w *WalletMysqlRepo) CreateOne(
 func (w *WalletMysqlRepo) GetTotalAmount(
 	ctx context.Context,
 	userId int64,
-) (decimal.Decimal, error) {
-	var total decimal.Decimal
-	if err := w.db.Client.WithContext(ctx).Where("user_id=?", userId).Find(&total).Error; err != nil {
-		return decimal.Zero, err
+) (*decimal.Decimal, error) {
+	var totalAmount decimal.Decimal
+	rawQuery := `
+  SELECT SUM(
+    CASE
+      WHEN transaction_type = 1 THEN amount
+      ELSE -amount
+    END) total_amount
+  FROM wallet_transaction
+  WHERE user_id = ?
+  `
+	if err := w.db.Client.WithContext(ctx).
+		Raw(rawQuery, userId).Scan(&totalAmount).Error; err != nil {
+		return &decimal.Zero, err
 	}
-	return decimal.Zero, nil
+	return &totalAmount, nil
 }
 
 func (w *WalletMysqlRepo) ListTransactions(

@@ -9,7 +9,7 @@ import (
 type TransactionType int
 
 const (
-	Topup TransactionType = iota
+	Topup TransactionType = iota + 1
 	Spent
 )
 

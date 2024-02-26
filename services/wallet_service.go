@@ -5,6 +5,7 @@ import (
 
 	"github.com/kumin/BityDating/entities"
 	"github.com/kumin/BityDating/repos"
+	"github.com/shopspring/decimal"
 )
 
 type WalletService struct {
@@ -24,6 +25,13 @@ func (w *WalletService) CreateTransaction(
 	transaction *entities.WalletTransaction,
 ) (*entities.WalletTransaction, error) {
 	return w.walletRepo.CreateOne(ctx, transaction)
+}
+
+func (w *WalletService) GetTotal(
+	ctx context.Context,
+	userId int64,
+) (*decimal.Decimal, error) {
+	return w.walletRepo.GetTotalAmount(ctx, userId)
 }
 
 func (w *WalletService) ListTransactions(

@@ -27,17 +27,40 @@ func (w *WalletHandler) CreateTransaction(c *gin.Context) {
 	var transaction entities.WalletTransaction
 	if err := c.BindJSON(&transaction); err != nil {
 		_ = c.Error(err)
-		c.JSON(http.StatusBadRequest, handler.ErrorMessage)
+		c.JSON(http.StatusBadRequest, handler.ErrorMessage(err))
 		return
 	}
 	_, err := w.walletService.CreateTransaction(c.Request.Context(), &transaction)
 	if err != nil {
 		_ = c.Error(err)
-		c.JSON(http.StatusInternalServerError, handler.ErrorMessage)
+		c.JSON(http.StatusInternalServerError, handler.ErrorMessage(err))
 		return
 	}
 
 	c.JSON(http.StatusOK, transaction)
+}
+
+func (w *WalletHandler) GetTotal(c *gin.Context) {
+	id, err := handler.GetParam("userid", &c.Params)
+	if err != nil {
+		_ = c.Error(err)
+		c.JSON(http.StatusBadRequest, handler.ErrorMessage(err))
+		return
+	}
+	userId, err := numberx.ParseInt(id)
+	if err != nil {
+		_ = c.Error(err)
+		c.JSON(http.StatusBadRequest, handler.ErrorMessage(err))
+		return
+	}
+	totalAmount, err := w.walletService.GetTotal(c.Request.Context(), userId)
+	if err != nil {
+		_ = c.Error(err)
+		c.JSON(http.StatusInternalServerError, handler.ErrorMessage(err))
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"total_amount": totalAmount})
 }
 
 func (w *WalletHandler) ListTransactions(c *gin.Context) {
