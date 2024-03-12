@@ -7,20 +7,21 @@ CMD_DIR = $(PROJECT_DIR)/cmd
 
 MIGRATIONS_DIR = $(PROJECT_DIR)/migrations
 
-WIREGEN = github.com/google/wire/cmd/wire
+WIREGEN = $(GOPATH)/bin/wire
+MOCKERY = $(GOPATH)/bin/mockery
+MIGRATE = $(GOPATH)/bin/migrate
 
-GOTEST = go test -tags unit -parallel $(shell nproc)
+GOUNITTEST = go test -tags unit -parallel $(shell nproc)
 
-#TODO:
-#Use pakage from GOPATH
-#Check install package first
+deps:
+	@sh ./hack/tools/deps.sh
 
 .PHONY: migrate
-migrate: 
+migrate: deps 
 	migrate -source "file:$(MIGRATIONS_DIR)" -database "mysql://$(DATABASE_URL)" up $(step)
 
-di:
-	go run -mod=mod $(WIREGEN) gen $(PROJECT_DIR)/...
+di: deps
+	$(WIREGEN) gen $(PROJECT_DIR)/...
 
 .PHONY: lint
 lint:
@@ -30,11 +31,11 @@ mock:
 	@rm -rf /mocks
 	mockery --dir . --output mocks --keeptree --all --disable-version-string --exported
 
-test-covering: di
-	$(GOTEST) -v -race -count=1 -coverprofile=tmp/coverprofile.out.tmp ./... && go tool cover -html=tmp/coverprofile.out.tmp 
+test-covering: di mock
+	$(GOUNITTEST) -v -race -count=1 -coverprofile=tmp/coverprofile.out.tmp ./... && go tool cover -html=tmp/coverprofile.out.tmp 
 
 test-unit: di mock
-	$(GOTEST) -v -race -count=1 ./...
+	$(GOUNITTEST) -v -race -count=1 ./...
 
 test-integration: di
 	go test -tags integration -v -race -p 1 -count=1 ./...
